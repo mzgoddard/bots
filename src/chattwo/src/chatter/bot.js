@@ -1,7 +1,7 @@
 const {processMessage} = require('chatter');
 const {normalizeResponse} = require('chatter');
 
-module.exports = class Bot {
+class Bot {
   constructor ({createMessageHandler, verbose}) {
     this.createMessageHandler = createMessageHandler;
     // Log more?
@@ -11,6 +11,7 @@ module.exports = class Bot {
   }
 
   onMessage(message) {
+    console.log('onMessage', message);
     return new Promise(resolve => {
       // Get the message text and an optional array of arguments based on
       // the current message. This is especially useful when "message" is
@@ -30,13 +31,17 @@ module.exports = class Bot {
       return resolve([messageHandler, text, args]);
     })
     .then(([messageHandler, text, args]) => {
+      console.log(messageHandler, text, args);
       // If messageHandlerArgs or getMessageHandler returned false, abort.
       if (messageHandler === false) {
         return false;
       }
-      this.out.attach(messageHandler.bind(messageHandler));
-      // Process text and additional args through the message handler.
-      return messageHandler.enqueue([text, ...args])
+      return this.processMessage(messageHandler, text, ...args)
+        // Then handle the response.
+        .then(response => this.handleResponse(message, response));
+      // messageHandler.attach(this.out);
+      // // Process text and additional args through the message handler.
+      // return messageHandler.enqueue([text, ...args])
     })
     // If there was an error, handle that.
     .catch(error => this.handleError(message, error));
@@ -80,7 +85,17 @@ module.exports = class Bot {
     return Promise.all(responses.map(text => this.sendResponse(message, text)));
   }
 
+  handleError(...args) {
+    console.error(...args);
+  }
+
   sendResponse(message, text) {
     this.out.enqueue({message});
+  }
+}
+
+module.exports = {
+  Bot,
+  default: function createBot () {
   }
 };

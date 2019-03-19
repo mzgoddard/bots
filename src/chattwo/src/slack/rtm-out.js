@@ -1,8 +1,10 @@
 const Source = require('../source');
 const Queue = require('../queue');
 
-class RTMOut extends Source {
+module.exports = class RTMOut extends Source {
   constructor (slackRtm) {
+    super();
+
     this.slackRtm = slackRtm;
     this.ready = false;
     this._queue = new Queue(this.doJob.bind(this));
@@ -22,4 +24,4 @@ class RTMOut extends Source {
     this.slackRtm.sendMessage(String(message), conversationId)
       .then(response => this.send(Object.assign({}, response)));
   }
-}
+};

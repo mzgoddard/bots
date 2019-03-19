@@ -25,7 +25,7 @@
     "wordwrap": "^1.0.0"
   },
   "scripts": {
-    "get-secrets": "ssh nest.bocoup.com cat /mnt/secrets/{ses,bots/bots-dev,rds-bocoup-db/{connection,db/bocoup-staging}} > .env",
+    "get-secrets": "ssh mzgoddard@nest.bocoup.com cat /mnt/secrets/{ses,bots/bots-dev,rds-bocoup-db/{connection,db/bocoup-staging}} > .env",
     "db": "export $(<.env) && psql $PGNAME",
     "start": "node -r esm ./src/main.js",
     "start-dev": "nodemon --watch src --exec \"node -r esm ./src/main.js\"",

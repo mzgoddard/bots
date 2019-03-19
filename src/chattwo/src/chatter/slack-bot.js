@@ -1,22 +1,20 @@
 const RTMIn = require('../slack/rtm-in');
 const RTMOut = require('../slack/rtm-out');
 
-const Bot = require('./bot');
+const {Bot} = require('./bot');
 
 class InMessageCompat {
-  constructor (bot, in) {
+  constructor (bot, rtmIn) {
     this.bot = bot;
-    this.in = in;
-
-    this.in.attach(this.enqueue.bind(this));
   }
 
   enqueue (job) {
+    console.log('InMessageCompat.enqueue', job);
     this.bot.onMessage(job);
   }
 }
 
-module.exports = class SlackBot extends Bot {
+class SlackBot extends Bot {
   constructor ({slack, getSlack, name, icon, eventNames, postMessageDelay, ...args}) {
     super(args);
 
@@ -54,7 +52,7 @@ module.exports = class SlackBot extends Bot {
     // this.bindEventHandlers(this.eventNames);
 
     this.in = new RTMIn(this.slack.rtmClient);
-    new InMessageCompat(this, this.in);
+    this.in.attach(new InMessageCompat(this));
     this.out = new RTMOut(this.slack.rtmClient);
 
     // Start the rtm client!
@@ -63,4 +61,11 @@ module.exports = class SlackBot extends Bot {
     return this;
   }
   
+}
+
+module.exports = {
+  SlackBot: SlackBot,
+  default: function createSlackBot (...args) {
+    return new SlackBot(...args);
+  }
 };

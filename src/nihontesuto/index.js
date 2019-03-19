@@ -1,25 +1,21 @@
-import {RtmClient, WebClient, MemoryDataStore} from '@slack/client';
-import {createSlackBot, createConversation, createCommand} from 'chatter';
+import {RtmClient} from '@slack/client';
+import {createSlackBot, createConversation, createCommand} from '../chattwo';
 import mixinBotHelpers from '../lib/bot-helpers';
 import config from '../../config';
 
-import outCommand from './commands/out';
-import inCommand from './commands/in';
 import versionCommand from './commands/version';
 
 const bot = createSlackBot({
-  name: 'Robocoup Mk. II',
+  name: 'Nihon Tesuto',
   icon: 'https://dl.dropboxusercontent.com/u/294332/Bocoup/bots/robocoup_icon.png',
   getSlack() {
     return {
-      rtmClient: new RtmClient(config.tokens.robocoup, {
-        dataStore: new MemoryDataStore(),
-        autoReconnect: true,
-      }),
-      webClient: new WebClient(config.tokens.robocoup),
+      rtmClient: new RtmClient(config.tokens.nihontesuto),
+      // webClient: new WebClient(config.tokens.nihontesuto),
     };
   },
   createMessageHandler(id, {channel}) {
+    console.log('createMessageHandler', id, channel);
     // Direct message
     if (channel.is_im) {
       // Wrapping the command in a conversation allows the bot to be aware of
@@ -31,8 +27,6 @@ const bot = createSlackBot({
           isParent: true,
           description: `Dead or alive, you're coming with me.`,
         }, [
-          outCommand,
-          inCommand,
           versionCommand,
         ]),
       ]);

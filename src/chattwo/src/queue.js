@@ -1,4 +1,4 @@
-class Queue {
+module.exports = class Queue {
   constructor (handle) {
     this._queue = [];
     this._promise = null;
@@ -17,6 +17,7 @@ class Queue {
     let item;
     while (item = this._queue.shift()) {
       if (this._paused) {
+        this._queue.unshift(item);
         this._promise = null;
         return;
       }
@@ -42,4 +43,4 @@ class Queue {
       this._promise = Promise.resolve().then(() => this.drain());
     }
   }
-}
+};

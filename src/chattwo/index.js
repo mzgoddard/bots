@@ -1,6 +1,6 @@
 // Bot
-const {Bot, default as createBot} = require('./src/bot');
-const {SlackBot, default as createSlackBot} = require('./src/slack/slack-bot');
+const {Bot, default: createBot} = require('./src/chatter/bot');
+const {SlackBot, default: createSlackBot} = require('./src/chatter/slack-bot');
 
 // Message 
 const {DelegatingMessageHandler, createDelegate} = require('chatter');
@@ -11,11 +11,11 @@ const {ConversingMessageHandler, createConversation} = require('chatter');
 const {CommandMessageHandler, createCommand} = require('chatter');
 
 // Util
-const {processMessage, isMessageHandlerOrHandlers} = require('./util/process-message');
-const {parseArgs} = require('./util/args-parser');
-const {isMessage, isArrayOfMessages, normalizeMessage, normalizeMessages, normalizeResponse} = require('./util/response');
-const {default as Queue} = require('./util/queue');
-const {composeCreators} = require('./message-handler/delegate');
+const {processMessage, isMessageHandlerOrHandlers} = require('chatter');
+const {parseArgs} = require('chatter');
+const {isMessage, isArrayOfMessages, normalizeMessage, normalizeMessages, normalizeResponse} = require('chatter');
+const {default: Queue} = require('chatter');
+const {composeCreators} = require('chatter');
 
 module.exports = {
   ArgsAdjustingMessageHandler,
