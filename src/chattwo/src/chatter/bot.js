@@ -78,6 +78,7 @@ class Bot {
   }
 
   handleResponse(message, response) {
+    console.log('handleResponse', message, response);
     if (response === false) {
       return false;
     }
@@ -90,7 +91,7 @@ class Bot {
   }
 
   sendResponse(message, text) {
-    this.out.enqueue({message});
+    this.out.enqueue({message: text, conversationId: message.channel});
   }
 }
 

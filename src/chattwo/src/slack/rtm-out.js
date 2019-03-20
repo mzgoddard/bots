@@ -8,10 +8,10 @@ module.exports = class RTMOut extends Source {
     this.slackRtm = slackRtm;
     this.ready = false;
     this._queue = new Queue(this.doJob.bind(this));
-    this._queue.pause();
+    // this._queue.pause();
 
-    this.slackRtm.on('ready', () => {
-      this._queue.resume();
+    this.slackRtm.on('connected', () => {
+      // this._queue.resume();
     });
   }
 
@@ -21,6 +21,7 @@ module.exports = class RTMOut extends Source {
 
   doJob (job) {
     const {message, conversationId} = job;
+    console.log('RTMOut', message, conversationId);
     this.slackRtm.sendMessage(String(message), conversationId)
       .then(response => this.send(Object.assign({}, response)));
   }
